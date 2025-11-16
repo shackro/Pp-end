@@ -1,0 +1,47 @@
+{
+  "1": {
+    "id": "1",
+    "user_phone": "0703412690",
+    "asset_id": "2",
+    "asset_name": "Apple Inc",
+    "invested_amount": 200.0,
+    "current_value": 203.99376026093452,
+    "units": 1.0908634729820388,
+    "entry_price": 183.341,
+    "current_price": 187.0021,
+    "profit_loss": 3.993760260934522,
+    "profit_loss_percentage": 1.9968801304672612,
+    "status": "active",
+    "created_at": "2025-11-16T16:48:08.101920"
+  },
+  "2": {
+    "id": "2",
+    "user_phone": "0703412690",
+    "asset_id": "4",
+    "asset_name": "Gold",
+    "invested_amount": 200.0,
+    "current_value": 198.29836487742745,
+    "units": 0.09767611430742629,
+    "entry_price": 2047.5835,
+    "current_price": 2030.1623,
+    "profit_loss": -1.7016351225725543,
+    "profit_loss_percentage": -0.8508175612862773,
+    "status": "active",
+    "created_at": "2025-11-16T16:53:32.619122"
+  },
+  "3": {
+    "id": "3",
+    "user_phone": "0703412690",
+    "asset_id": "4",
+    "asset_name": "Gold",
+    "invested_amount": 1000.0,
+    "current_value": 1003.3230566012317,
+    "units": 0.4942082988149429,
+    "entry_price": 2023.4383,
+    "current_price": 2030.1623,
+    "profit_loss": 3.323056601231656,
+    "profit_loss_percentage": 0.33230566012316554,
+    "status": "active",
+    "created_at": "2025-11-16T17:10:34.911198"
+  }
+}

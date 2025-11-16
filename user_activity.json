@@ -1,0 +1,128 @@
+{
+  "1": {
+    "id": "1",
+    "user_phone": "0703412694",
+    "activity_type": "registration",
+    "amount": 0,
+    "description": "User registered successfully",
+    "timestamp": "2025-11-16T15:05:23.209057",
+    "status": "completed"
+  },
+  "2": {
+    "id": "2",
+    "user_phone": "0703412694",
+    "activity_type": "deposit",
+    "amount": 100.0,
+    "description": "Deposit of KSh 100.0",
+    "timestamp": "2025-11-16T15:08:49.865901",
+    "status": "completed"
+  },
+  "3": {
+    "id": "3",
+    "user_phone": "0703412694",
+    "activity_type": "deposit",
+    "amount": 5000.0,
+    "description": "Deposit of KSh 5000.0",
+    "timestamp": "2025-11-16T15:08:55.872966",
+    "status": "completed"
+  },
+  "4": {
+    "id": "4",
+    "user_phone": "0703412694",
+    "activity_type": "withdraw",
+    "amount": 100.0,
+    "description": "Withdrawal of KSh 100.0",
+    "timestamp": "2025-11-16T15:10:45.162090",
+    "status": "completed"
+  },
+  "5": {
+    "id": "5",
+    "user_phone": "254703412454",
+    "activity_type": "registration",
+    "amount": 0,
+    "description": "User registered successfully",
+    "timestamp": "2025-11-16T15:46:26.386726",
+    "status": "completed"
+  },
+  "6": {
+    "id": "6",
+    "user_phone": "07034126787",
+    "activity_type": "registration",
+    "amount": 0,
+    "description": "User registered successfully",
+    "timestamp": "2025-11-16T16:00:40.138940",
+    "status": "completed"
+  },
+  "7": {
+    "id": "7",
+    "user_phone": "0703412694",
+    "activity_type": "registration",
+    "amount": 0,
+    "description": "User registered successfully",
+    "timestamp": "2025-11-16T16:10:17.379574",
+    "status": "completed"
+  },
+  "8": {
+    "id": "8",
+    "user_phone": "0703412690",
+    "activity_type": "registration",
+    "amount": 0,
+    "description": "User registered successfully",
+    "timestamp": "2025-11-16T16:36:24.611624",
+    "status": "completed"
+  },
+  "9": {
+    "id": "9",
+    "user_phone": "0703412690",
+    "activity_type": "deposit",
+    "amount": 500.0,
+    "description": "Deposit of KSh 500.0",
+    "timestamp": "2025-11-16T16:47:12.288731",
+    "status": "completed"
+  },
+  "10": {
+    "id": "10",
+    "user_phone": "0703412690",
+    "activity_type": "investment",
+    "amount": 200.0,
+    "description": "Investment in Apple Inc - 1.0909 units",
+    "timestamp": "2025-11-16T16:48:08.103533",
+    "status": "completed"
+  },
+  "11": {
+    "id": "11",
+    "user_phone": "0703412690",
+    "activity_type": "investment",
+    "amount": 200.0,
+    "description": "Investment in Gold - 0.0977 units",
+    "timestamp": "2025-11-16T16:53:32.622045",
+    "status": "completed"
+  },
+  "12": {
+    "id": "12",
+    "user_phone": "0703412690",
+    "activity_type": "deposit",
+    "amount": 5000.0,
+    "description": "Deposit of KSh 5000.0",
+    "timestamp": "2025-11-16T17:09:36.680444",
+    "status": "completed"
+  },
+  "13": {
+    "id": "13",
+    "user_phone": "0703412690",
+    "activity_type": "investment",
+    "amount": 1000.0,
+    "description": "Investment in Gold - 0.4942 units",
+    "timestamp": "2025-11-16T17:10:34.915242",
+    "status": "completed"
+  },
+  "14": {
+    "id": "14",
+    "user_phone": "0703412690",
+    "activity_type": "withdraw",
+    "amount": 100.0,
+    "description": "Withdrawal of KSh 100.0",
+    "timestamp": "2025-11-16T17:46:40.848851",
+    "status": "completed"
+  }
+}

@@ -1,12 +1,22 @@
 {
   "0703412694": {
-    "balance": 0.0,
-    "equity": 0.0,
+    "balance": 3000.0,
+    "equity": 5000.0,
     "currency": "KES"
   },
   "0703412690": {
     "balance": 4000.0,
     "equity": 5400.0,
+    "currency": "KES"
+  },
+  "0703412686": {
+    "balance": 1000.0,
+    "equity": 1000.0,
+    "currency": "KES"
+  },
+  "0703412697": {
+    "balance": 6500.0,
+    "equity": 6500.0,
     "currency": "KES"
   }
 }

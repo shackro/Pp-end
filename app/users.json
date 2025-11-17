@@ -1,1 +1,26 @@
-{}
+{
+  "shackroarel246@gmail.com": {
+    "id": "67f669b0-d5a3-48b3-907e-5fae51e1f9aa",
+    "name": "shakira arel",
+    "email": "shackroarel246@gmail.com",
+    "phone_number": "0703412694",
+    "hashed_password": "$1$t8vEGi0W$VbR4dcAQbuc98W5PMCMuh.",
+    "created_at": "2025-11-16T20:08:21.254672"
+  },
+  "shackroarel24@gmail.com": {
+    "id": "f136d1c0-59c0-4fba-830b-0323ebacc351",
+    "name": "shakira arel",
+    "email": "shackroarel24@gmail.com",
+    "phone_number": "0703412686",
+    "hashed_password": "$1$9C5duChn$l34vQshQ6pD4PtdRlXkXQ0",
+    "created_at": "2025-11-16T21:21:15.765386"
+  },
+  "shackroarel@gmail.com": {
+    "id": "f2cd9d6e-dd3e-4b61-ba6f-c2aa868bbe4a",
+    "name": "cvmaker",
+    "email": "shackroarel@gmail.com",
+    "phone_number": "0703412697",
+    "hashed_password": "$1$TefajOdF$WeYYJKdnFF52JXkzWsHUg.",
+    "created_at": "2025-11-17T10:41:28.076616"
+  }
+}

@@ -43,5 +43,20 @@
     "profit_loss_percentage": 0.33230566012316554,
     "status": "active",
     "created_at": "2025-11-16T17:10:34.911198"
+  },
+  "4": {
+    "id": "4",
+    "user_phone": "0703412694",
+    "asset_id": "2",
+    "asset_name": "Apple Inc",
+    "invested_amount": 2000.0,
+    "current_value": 1999.6558800947735,
+    "units": 10.821380667495223,
+    "entry_price": 184.8193,
+    "current_price": 184.7875,
+    "profit_loss": -0.3441199052265347,
+    "profit_loss_percentage": -0.017205995261326733,
+    "status": "active",
+    "created_at": "2025-11-16T20:09:03.783096"
   }
 }

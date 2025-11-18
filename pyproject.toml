@@ -2,7 +2,8 @@
 name = "psp-backend"
 version = "0.1.0"
 description = ""
-authors = ["Sharkonline sharkonline@example.com"]
+authors = ["shakira 0nline <email@example.com>"]
+package-mode = false  # Add this line
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -18,8 +19,6 @@ pydantic = "1.10.12"
 python-dotenv = "1.0.0"
 pyjwt = "2.8.0"
 email-validator = "2.1.0"
-
-[tool.poetry.group.dev.dependencies]
 
 [build-system]
 requires = ["poetry-core"]

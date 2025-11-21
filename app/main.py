@@ -29,6 +29,11 @@ ALLOWED_ORIGINS = [
     "https://pesaprime.vercel.app"
 ]
 
+origins = [
+    "https://pesaprime.vercel.app",  # Vercel frontend URL
+    "http://localhost:3000",         # local dev URL (Vite)
+]
+
 # File-based storage
 USERS_FILE = "users.json"
 USER_ACTIVITY_FILE = "user_activity.json"
@@ -44,7 +49,7 @@ app = FastAPI(
 # CORS configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*","https://pesaprime.vercel.app"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

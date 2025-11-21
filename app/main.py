@@ -22,7 +22,7 @@ ALGORITHM = os.getenv("ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "70"))
 
 # Get allowed origins from environment
-FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
+FRONTEND_URL = os.getenv("https://pesaprime.vercel.app", "http://localhost:3000")
 ALLOWED_ORIGINS = [
     FRONTEND_URL,
     "http://localhost:3000",

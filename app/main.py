@@ -30,6 +30,7 @@ ALLOWED_ORIGINS = [
 ]
 
 origins = [
+     FRONTEND_URL,
     "https://pesaprime.vercel.app",  # Vercel frontend URL
     "http://localhost:3000",         # local dev URL (Vite)
 ]

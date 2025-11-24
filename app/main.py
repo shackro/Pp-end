@@ -13,6 +13,8 @@ import random
 import uuid
 import aiohttp
 import asyncio
+from app.routes import auth, wallet
+from app.routes import investments
 
 # Security setup
 security = HTTPBearer()
@@ -62,6 +64,11 @@ USERS_FILE = os.path.join(BASE_DIR, "users.json")
 USER_ACTIVITY_FILE = os.path.join(BASE_DIR, "user_activity.json")
 USER_WALLETS_FILE = os.path.join(BASE_DIR, "user_wallets.json")
 USER_INVESTMENTS_FILE = os.path.join(BASE_DIR, "user_investments.json")
+
+
+app.include_router(auth.router, prefix="/api/auth")
+app.include_router(wallet.router, prefix="/api/wallet")
+app.include_router(investments.router)
 
 # Pydantic models
 class UserBase(BaseModel):
@@ -143,6 +150,7 @@ class UserInvestment(BaseModel):
     profit_loss_percentage: float
     status: str
     created_at: str
+    
 
 class UserActivity(BaseModel):
     id: str
@@ -153,10 +161,12 @@ class UserActivity(BaseModel):
     timestamp: str
     status: str
 
+
 class PnLData(BaseModel):
     profit_loss: float
     percentage: float
     trend: str
+
 
 # PRODUCTION ASSETS DATA
 PRODUCTION_ASSETS = {

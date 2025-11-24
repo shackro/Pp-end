@@ -1,22 +1,25 @@
+# app/schemas/wallet.py
 from pydantic import BaseModel
 from datetime import datetime
 
-class WalletBase(BaseModel):
-    balance: float = 0.0
-    equity: float = 0.0
-    currency: str = "KES"
-
-class WalletResponse(WalletBase):
+class WalletResponse(BaseModel):
     id: int
     user_id: int
+    balance: float
+    equity: float
+    currency: str
     created_at: datetime
-    updated_at: datetime
-    
+
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 class DepositRequest(BaseModel):
     amount: float
+    phone_number: str
+
+class WithdrawRequest(BaseModel):
+    amount: float
+    phone_number: str
 
 class TransactionResponse(BaseModel):
     success: bool

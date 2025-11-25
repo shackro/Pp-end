@@ -12,6 +12,6 @@ class Settings:
     database_url: str = os.getenv("DATABASE_URL", "sqlite:///./PesaPrime.db")
     
     # CORS
-    allowed_origins: List[str] = ["pesaprime.vercel.app", "http://localhost:3000]
+    allowed_origins: List[str] = ["pesaprime.vercel.app", "http://localhost:3000"]
 
 settings = Settings()

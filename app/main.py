@@ -743,43 +743,34 @@ async def withdraw_funds(withdraw_data: WithdrawRequest, current_user: dict = De
     )
 
 @app.get("/api/wallet/pnl", response_model=PnLData)
-async def get_pnl_data(current_user: dict = Depends(get_current_user)):
-    """Get profit and loss data for the user"""
-    try:
-        # Get user investments
-        investments = load_data(USER_INVESTMENTS_FILE, default={})
-        user_investments = [
-            inv for inv in investments.values() 
-            if inv["user_phone"] == current_user["phone_number"] and inv["status"] == "active"
-        ]
-        
-        # Calculate total profit/loss
-        total_profit_loss = sum(inv["profit_loss"] for inv in user_investments)
-        total_invested = sum(inv["invested_amount"] for inv in user_investments)
-        
-        # Calculate percentage
-        if total_invested > 0:
-            percentage = (total_profit_loss / total_invested) * 100
-        else:
-            percentage = 0.0
-        
-        # Determine trend
-        trend = "up" if total_profit_loss >= 0 else "down"
-        
-        return PnLData(
-            profit_loss=total_profit_loss,
-            percentage=percentage,
-            trend=trend
-        )
-        
-    except Exception as e:
-        print(f"Error calculating PnL: {e}")
-        # Return zero PnL if there's an error
-        return PnLData(
-            profit_loss=0.0,
-            percentage=0.0,
-            trend="up"
-        )
+async def get_user_pnl(current_user: dict = Depends(get_current_user)):
+    """Calculate user's overall PnL across active investments"""
+    await update_investment_values(current_user["phone_number"])
+    investments = load_data(USER_INVESTMENTS_FILE, default={})
+    
+    total_invested = 0
+    total_current_value = 0
+    
+    for inv in investments.values():
+        if inv["user_phone"] == current_user["phone_number"] and inv["status"] == "active":
+            total_invested += inv.get("invested_amount", 0)
+            total_current_value += inv.get("current_value", 0)
+    
+    if total_invested == 0:
+        profit_loss = 0
+        percentage = 0
+        trend = "neutral"
+    else:
+        profit_loss = total_current_value - total_invested
+        percentage = (profit_loss / total_invested) * 100
+        trend = "up" if profit_loss >= 0 else "down"
+    
+    return PnLData(
+        profit_loss=round(profit_loss, 2),
+        percentage=round(percentage, 2),
+        trend=trend
+    )
+
 
 # Investment endpoints
 @app.post("/api/investments/buy")

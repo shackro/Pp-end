@@ -1,12 +1,15 @@
 # app/routes/wallet.py
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from app.database import get_db
 from app.models.user import User
 from app.models.wallet import Wallet
-from app.schemas.wallet import WalletResponse, DepositRequest, TransactionResponse, PnLData
+from app.schemas.wallet import WalletResponse, DepositRequest, WithdrawRequest, TransactionResponse, PnLData
 from app.core.security import decode_token
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+
+# Placeholder imports for your dynamic functions
+# from app.utils.investments import update_investment_values, load_data, USER_INVESTMENTS_FILE
 
 router = APIRouter(prefix="/api/wallet", tags=["wallet"])
 security = HTTPBearer()
@@ -23,11 +26,12 @@ def get_user_from_token(credentials: HTTPAuthorizationCredentials = Depends(secu
 
 @router.get("/balance/{phone_number}", response_model=WalletResponse)
 def get_wallet_balance(phone_number: str, db: Session = Depends(get_db)):
-    wallet = db.query(Wallet).filter(Wallet.user_id == db.query(User).filter(User.phone_number == phone_number).first().id).first()
+    user = db.query(User).filter(User.phone_number == phone_number).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    wallet = db.query(Wallet).filter(Wallet.user_id == user.id).first()
     if not wallet:
-        user = db.query(User).filter(User.phone_number == phone_number).first()
-        if not user:
-            raise HTTPException(status_code=404, detail="User not found")
         wallet = Wallet(user_id=user.id, balance=0.0, equity=0.0)
         db.add(wallet)
         db.commit()
@@ -46,17 +50,20 @@ def deposit_funds(data: DepositRequest, current_user: User = Depends(get_user_fr
     db.refresh(wallet)
     return TransactionResponse(success=True, message="Deposit successful", new_balance=wallet.balance, new_equity=wallet.equity)
 
-@app.get("/api/wallet/pnl", response_model=PnLData)
-async def get_user_pnl(current_user: dict = Depends(get_current_user)):
+@router.get("/pnl", response_model=PnLData)
+async def get_user_pnl(current_user: User = Depends(get_user_from_token)):
     """Calculate user's overall PnL across active investments"""
-    await update_investment_values(current_user["phone_number"])
-    investments = load_data(USER_INVESTMENTS_FILE, default={})
+    
+    # Placeholder: implement these functions as per your project
+    # await update_investment_values(current_user.phone_number)
+    # investments = load_data(USER_INVESTMENTS_FILE, default={})
+    investments = {}  # temporary placeholder
     
     total_invested = 0
     total_current_value = 0
     
     for inv in investments.values():
-        if inv["user_phone"] == current_user["phone_number"] and inv["status"] == "active":
+        if inv.get("user_phone") == current_user.phone_number and inv.get("status") == "active":
             total_invested += inv.get("invested_amount", 0)
             total_current_value += inv.get("current_value", 0)
     
@@ -74,5 +81,3 @@ async def get_user_pnl(current_user: dict = Depends(get_current_user)):
         percentage=round(percentage, 2),
         trend=trend
     )
-
-

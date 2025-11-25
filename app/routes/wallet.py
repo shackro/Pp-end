@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.user import User
 from app.models.wallet import Wallet
-from app.schemas.wallet import WalletResponse, DepositRequest, TransactionResponse
+from app.schemas.wallet import WalletResponse, DepositRequest, TransactionResponse, PnLData
 from app.core.security import decode_token
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 

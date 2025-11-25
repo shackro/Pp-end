@@ -69,7 +69,7 @@ USER_INVESTMENTS_FILE = os.path.join(BASE_DIR, "user_investments.json")
 
 
 app.include_router(auth_router, prefix="/api/auth")
-app.include_router(wallet_router, prefix="/api/wallet")
+app.include_router(wallet_router)
 app.include_router(investments_router, prefix="/api/investments")
 app.include_router(activities_router, prefix="/api/activities")
 

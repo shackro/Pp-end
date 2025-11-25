@@ -11,7 +11,7 @@ class WalletResponse(BaseModel):
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True  # Updated for Pydantic V2
 
 class DepositRequest(BaseModel):
     amount: float
@@ -26,3 +26,12 @@ class TransactionResponse(BaseModel):
     message: str
     new_balance: float
     new_equity: float
+
+# Add this for PnL data
+class PnLData(BaseModel):
+    profit: float
+    loss: float
+    net: float  # optional, can be profit - loss
+
+    class Config:
+        from_attributes = True  # Updated for Pydantic V2

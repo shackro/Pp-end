@@ -13,7 +13,10 @@ import random
 import uuid
 import aiohttp
 import asyncio
-from app.routes import auth, wallet,investments,activities
+from app.routes.activities import router as activities_router
+from app.routes.auth import router as auth_router
+from app.routes.wallet import router as wallet_router
+from app.routes.investments import router as investments_router
 
 # Security setup
 security = HTTPBearer()
@@ -65,10 +68,10 @@ USER_WALLETS_FILE = os.path.join(BASE_DIR, "user_wallets.json")
 USER_INVESTMENTS_FILE = os.path.join(BASE_DIR, "user_investments.json")
 
 
-app.include_router(auth.router, prefix="/api/auth")
-app.include_router(wallet.router, prefix="/api/wallet")
-app.include_router(investments.router, prefix="/api/investments")
-app.include_router(activities.router, prefix="/api/activities")
+app.include_router(auth_router, prefix="/api/auth")
+app.include_router(wallet_router, prefix="/api/wallet")
+app.include_router(investments_router, prefix="/api/investments")
+app.include_router(activities_router, prefix="/api/activities")
 
 # Pydantic models
 class UserBase(BaseModel):

@@ -30,4 +30,10 @@ def login(user_data: UserLogin, db: Session = Depends(get_db)):
     token = create_access_token({"sub": user.email})
     return TokenResponse(access_token=token, token_type="bearer", user=UserResponse.from_orm(user))
 
+@router.get("/user/")
+async def get_user(current_user: dict = Depends(get_current_user)):
+    if current_user:
+        return {"email": current_user.get("email")}
+    return {"error": "User not found"}
+
 # simple user info endpoint - uses Bearer token decoding in main

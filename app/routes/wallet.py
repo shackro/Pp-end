@@ -1,83 +1,113 @@
-# app/routes/wallet.py
+from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from app.database import get_db
 from app.models.user import User
 from app.models.wallet import Wallet
-from app.schemas.wallet import WalletResponse, DepositRequest, WithdrawRequest, TransactionResponse, PnLData
-from app.core.security import decode_token
+from app.schemas.wallet import WalletData, DepositRequest, WithdrawRequest, TransactionResponse
+from app.core.security import get_current_user
 
-# Placeholder imports for your dynamic functions
-# from app.utils.investments import update_investment_values, load_data, USER_INVESTMENTS_FILE
+router = APIRouter()
 
-router = APIRouter(prefix="/api/wallet", tags=["wallet"])
-security = HTTPBearer()
-
-def get_user_from_token(credentials: HTTPAuthorizationCredentials = Depends(security), db: Session = Depends(get_db)):
-    token = credentials.credentials
-    payload = decode_token(token)
-    if not payload or "sub" not in payload:
-        raise HTTPException(status_code=401, detail="Invalid token")
-    user = db.query(User).filter(User.email == payload["sub"]).first()
-    if not user:
-        raise HTTPException(status_code=401, detail="User not found")
-    return user
-
-@router.get("/balance/{phone_number}", response_model=WalletResponse)
-def get_wallet_balance(phone_number: str, db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.phone_number == phone_number).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+@router.get("/balance/", response_model=WalletData)
+async def get_wallet_balance(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    wallet = db.query(Wallet).filter(Wallet.user_id == current_user.id).first()
     
-    wallet = db.query(Wallet).filter(Wallet.user_id == user.id).first()
     if not wallet:
-        wallet = Wallet(user_id=user.id, balance=0.0, equity=0.0)
+        # Create wallet if it doesn't exist
+        wallet = Wallet(user_id=current_user.id, balance=0.0, equity=0.0)
         db.add(wallet)
         db.commit()
         db.refresh(wallet)
-    return wallet
+    
+    return WalletData(
+        id=wallet.id,
+        user_id=wallet.user_id,
+        balance=wallet.balance,
+        equity=wallet.equity,
+        currency=wallet.currency,
+        created_at=wallet.created_at.isoformat() if wallet.created_at else datetime.utcnow().isoformat(),
+        updated_at=wallet.updated_at.isoformat() if wallet.updated_at else datetime.utcnow().isoformat()
+    )
 
-@router.post("/deposit", response_model=TransactionResponse)
-def deposit_funds(data: DepositRequest, current_user: User = Depends(get_user_from_token), db: Session = Depends(get_db)):
+@router.post("/deposit/", response_model=TransactionResponse)
+async def deposit_funds(
+    deposit_data: DepositRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    if deposit_data.phone_number != current_user.phone_number:
+        raise HTTPException(status_code=403, detail="Unauthorized")
+    
     wallet = db.query(Wallet).filter(Wallet.user_id == current_user.id).first()
     if not wallet:
         wallet = Wallet(user_id=current_user.id, balance=0.0, equity=0.0)
         db.add(wallet)
-    wallet.balance += data.amount
-    wallet.equity += data.amount
+    
+    wallet.balance += deposit_data.amount
+    wallet.equity += deposit_data.amount
+    
     db.commit()
     db.refresh(wallet)
-    return TransactionResponse(success=True, message="Deposit successful", new_balance=wallet.balance, new_equity=wallet.equity)
+    
+    # Log transaction
+    from app.models.transaction import Transaction
+    transaction = Transaction(
+        user_id=current_user.id,
+        type="deposit",
+        amount=deposit_data.amount,
+        description=f"Deposit of {deposit_data.amount} {wallet.currency}",
+        status="completed"
+    )
+    db.add(transaction)
+    db.commit()
+    
+    return TransactionResponse(
+        success=True,
+        message="Deposit successful",
+        new_balance=wallet.balance,
+        new_equity=wallet.equity,
+        transaction_id=f"DEP{datetime.utcnow().strftime('%Y%m%d%H%M%S')}"
+    )
 
-@router.get("/pnl", response_model=PnLData)
-async def get_user_pnl(current_user: User = Depends(get_user_from_token)):
-    """Calculate user's overall PnL across active investments"""
+@router.post("/withdraw/", response_model=TransactionResponse)
+async def withdraw_funds(
+    withdraw_data: WithdrawRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    if withdraw_data.phone_number != current_user.phone_number:
+        raise HTTPException(status_code=403, detail="Unauthorized")
     
-    # Placeholder: implement these functions as per your project
-    # await update_investment_values(current_user.phone_number)
-    # investments = load_data(USER_INVESTMENTS_FILE, default={})
-    investments = {}  # temporary placeholder
+    wallet = db.query(Wallet).filter(Wallet.user_id == current_user.id).first()
+    if not wallet or wallet.balance < withdraw_data.amount:
+        raise HTTPException(status_code=400, detail="Insufficient balance")
     
-    total_invested = 0
-    total_current_value = 0
+    wallet.balance -= withdraw_data.amount
+    wallet.equity -= withdraw_data.amount
     
-    for inv in investments.values():
-        if inv.get("user_phone") == current_user.phone_number and inv.get("status") == "active":
-            total_invested += inv.get("invested_amount", 0)
-            total_current_value += inv.get("current_value", 0)
+    db.commit()
+    db.refresh(wallet)
     
-    if total_invested == 0:
-        profit_loss = 0
-        percentage = 0
-        trend = "neutral"
-    else:
-        profit_loss = total_current_value - total_invested
-        percentage = (profit_loss / total_invested) * 100
-        trend = "up" if profit_loss >= 0 else "down"
+    # Log transaction
+    from app.models.transaction import Transaction
+    transaction = Transaction(
+        user_id=current_user.id,
+        type="withdrawal",
+        amount=withdraw_data.amount,
+        description=f"Withdrawal of {withdraw_data.amount} {wallet.currency}",
+        status="completed"
+    )
+    db.add(transaction)
+    db.commit()
     
-    return PnLData(
-        profit_loss=round(profit_loss, 2),
-        percentage=round(percentage, 2),
-        trend=trend
+    return TransactionResponse(
+        success=True,
+        message="Withdrawal successful",
+        new_balance=wallet.balance,
+        new_equity=wallet.equity,
+        transaction_id=f"WD{datetime.utcnow().strftime('%Y%m%d%H%M%S')}"
     )

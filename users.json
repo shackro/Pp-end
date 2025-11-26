@@ -1,18 +1,10 @@
 {
   "shackroarel@gmail.com": {
     "id": "5dc79ad5-f33c-4df4-bc69-603432482cdc",
-    "name": "Brand-New",
-    "email": "shackroarel@gmail.com",
-    "phone_number": "0703412694",
+    "name": "shakira",
+    "email": "shakiraonclick@gmail.com",
+    "phone_number": "0721412694",
     "hashed_password": "$1$Y5brFOqq$DIvsGpMp6hP0ndk4I/57w/",
     "created_at": "2025-11-16T16:10:17.375823"
-  },
-  "shackroarel12@gmail.com": {
-    "id": "ec03bc8a-45df-4b39-b952-6762263a3c8d",
-    "name": "shakira arel",
-    "email": "shackroarel12@gmail.com",
-    "phone_number": "0703412690",
-    "hashed_password": "$1$3CtVIwZ/$r/ON1w6XgXZe9.AsebsAL0",
-    "created_at": "2025-11-16T16:36:24.610254"
   }
 }

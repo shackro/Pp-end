@@ -1,3 +1,4 @@
+from unittest.mock import Base
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
@@ -13,10 +14,21 @@ import random
 import uuid
 import aiohttp
 import asyncio
-from app.routes.activities import router as activities_router
-from app.routes.auth import router as auth_router
-from app.routes.wallet import router as wallet_router
-from app.routes.investments import router as investments_router
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, Session
+
+# Import your routers
+from app.routes import auth, wallet, investments, activities
+from app.database import engine, Base, get_db
+from app.core.security import (
+    SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES,
+    verify_password, get_password_hash, create_access_token,
+    decode_token, get_current_user, security, pwd_context
+)
+
+# Import models to ensure they are registered
+from app.models import user, wallet as wallet_model, investment, activity, transaction
 
 # Security setup
 security = HTTPBearer()
@@ -68,10 +80,11 @@ USER_WALLETS_FILE = os.path.join(BASE_DIR, "user_wallets.json")
 USER_INVESTMENTS_FILE = os.path.join(BASE_DIR, "user_investments.json")
 
 
-app.include_router(auth_router, prefix="/api/auth")
-app.include_router(wallet_router)
-app.include_router(investments_router, prefix="/api/investments")
-app.include_router(activities_router, prefix="/api/activities")
+# In main.py - FIX ROUTE PREFIXES
+app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
+app.include_router(wallet.router, prefix="/api/wallet", tags=["wallet"])
+app.include_router(investments.router, prefix="/api/investments", tags=["investments"])
+app.include_router(activities.router, prefix="/api/activities", tags=["activities"])
 
 # Pydantic models
 class UserBase(BaseModel):
@@ -246,25 +259,24 @@ CURRENCY_RATES = {
     "TZS": 20.1,    # 1 KES = 20.1 TZS
 }
 
-# Storage functions
+
+# Create database tables on startup
 @app.on_event("startup")
 async def startup_event():
-    """Ensure required files exist on startup"""
-    required_files = [USERS_FILE, USER_ACTIVITY_FILE, USER_WALLETS_FILE, USER_INVESTMENTS_FILE]
+    try:
+        Base.metadata.create_all(bind=engine)
+        print("✅ Database tables created successfully")
+    except Exception as e:
+        print(f"❌ Error creating tables: {e}")
+    
+    # Ensure JSON files exist (for fallback)
+    required_files = ["users.json", "user_activity.json", "user_wallets.json", "user_investments.json"]
     for file_path in required_files:
         if not os.path.exists(file_path):
             with open(file_path, 'w') as f:
                 json.dump({}, f)
             print(f"Created {file_path}")
-
-def load_data(filename, default={}):
-    if os.path.exists(filename):
-        try:
-            with open(filename, 'r') as f:
-                return json.load(f)
-        except:
-            return default
-    return default
+            
 
 def save_data(data, filename):
     with open(filename, 'w') as f:

@@ -28,7 +28,7 @@ from app.core.security import (
 )
 
 # Import models to ensure they are registered
-from app.models import user, wallet as wallet_model, investment, activity, transaction
+from app.models import user, wallet as wallet_model, transaction, activity, transaction
 
 # Security setup
 security = HTTPBearer()

@@ -1,8 +1,7 @@
-# app/models/wallet.py
-from sqlalchemy import Column, Integer, Float, String, DateTime, ForeignKey, func
+from sqlalchemy import Column, Integer, Float, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 from app.database import Base
-from app.models.user import User
 
 class Wallet(Base):
     __tablename__ = "wallets"

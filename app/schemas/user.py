@@ -1,4 +1,3 @@
-# app/schemas/user.py
 from pydantic import BaseModel, EmailStr
 from typing import Optional
 from datetime import datetime
@@ -17,12 +16,18 @@ class UserLogin(BaseModel):
 
 class UserResponse(UserBase):
     id: int
-    created_at: datetime
-
+    created_at: str
+    
     class Config:
-        orm_mode = True
+        from_attributes = True
 
-class TokenResponse(BaseModel):
+class AuthResponse(BaseModel):
+    success: bool
+    message: str
     access_token: str
     token_type: str
     user: UserResponse
+
+class TokenRefreshResponse(BaseModel):
+    access: str
+    refresh: str

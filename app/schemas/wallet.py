@@ -1,17 +1,14 @@
-# app/schemas/wallet.py
+from typing import Optional
 from pydantic import BaseModel
-from datetime import datetime
 
-class WalletResponse(BaseModel):
+class WalletData(BaseModel):
     id: int
     user_id: int
     balance: float
     equity: float
     currency: str
-    created_at: datetime
-
-    class Config:
-        from_attributes = True  # Updated for Pydantic V2
+    created_at: str
+    updated_at: str
 
 class DepositRequest(BaseModel):
     amount: float
@@ -26,12 +23,4 @@ class TransactionResponse(BaseModel):
     message: str
     new_balance: float
     new_equity: float
-
-# Add this for PnL data
-class PnLData(BaseModel):
-    profit: float
-    loss: float
-    net: float  # optional, can be profit - loss
-
-    class Config:
-        from_attributes = True  # Updated for Pydantic V2
+    transaction_id: Optional[str] = None
